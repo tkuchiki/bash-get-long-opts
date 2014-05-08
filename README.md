@@ -1,7 +1,7 @@
 bash-get-long-opts
 ==================
 
-Get long options for bash.
+Get long options for bash.  
 This script run on the bash.
 
 # Functions
@@ -29,7 +29,7 @@ $ get_long_options $(parse_options --foo -abc -s bar)
 
 # Example
 
-(example.sh)[http://github.com/tkuchiki/bash-get-long-opts/example.sh]
+[example.sh](https://github.com/tkuchiki/bash-get-long-opts/blob/master/example.sh)
 
 ## Non-option
 
