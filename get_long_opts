@@ -1,0 +1,80 @@
+#!/bin/bash
+
+SCRIPT=$(basename "${0}")
+
+usage() {
+    echo "
+Usage: ${SCRIPT}
+    --help        Display this help message
+    -v, --verbose Verbose mode
+    -d, --debug   Debug mode
+    -s, --set     Set variable
+"
+}
+
+parse_options() {(
+    OPTIONS=""
+
+    for OPT in "$@"; do
+        OPTIONS="${OPTIONS} $(echo ${OPT} | awk '{
+            if (/^-[[:alnum:]]+/) {
+                param = $0
+                for (i = 2; i <= length(param); ++i) {
+                    print "-" substr(param, i, 1)
+                }
+            } else {
+                print $0
+            }
+        }')"
+    done
+    
+    echo $OPTIONS
+)}
+
+VERBOSE=0
+DEBUG=0
+VAL=""
+
+get_long_opts() {
+    for OPT in "${@}"; do
+        case "${OPT}" in
+            ( --help )
+                usage
+                exit 1
+                ;;
+            ( -v|--verbose )
+                VERBOSE=1
+                shift 1
+                ;;
+            ( -d|--debug )
+                DEBUG=1
+                shift 1
+                ;;
+            ( -s|--set )
+                VAL="${2}"
+                shift 2
+                ;;
+            ( -* )
+                echo "${SCRIPT}: error - unrecognized option ${OPT}" 1>&2
+                exit 1
+                ;;
+        esac
+    done
+}
+
+# test code
+get_long_opts $(parse_options "${@}")
+
+if [ $VERBOSE -eq 1 ] ; then
+    echo "use verbose mode."
+fi
+
+if [ $DEBUG -eq 1 ] ; then
+    echo "use debug mode."
+fi
+
+if [ "${VAL}" != "" ] ; then
+    echo "set VAL=${VAL}."
+else
+    echo "VAL is empty."
+fi
